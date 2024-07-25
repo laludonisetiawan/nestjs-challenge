@@ -10,6 +10,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserInterceptorsDto } from './dtos/user-interceptors.dto';
 
 @Controller('users')
 export class UsersController {
@@ -20,6 +22,7 @@ export class UsersController {
     return this.userService.create(createUserDto);
   }
 
+  @Serialize(UserInterceptorsDto)
   @Get('/:id/')
   async findOne(@Param('id') id: number) {
     return this.userService.findOneBy(id);
