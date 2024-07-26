@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -11,6 +15,12 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const checkUserName = await this.findOne(createUserDto.username);
+
+    if (checkUserName) {
+      throw new BadRequestException('Username already exists');
+    }
+
     const user = await this.usersRepository.create(createUserDto);
     await this.usersRepository.save(user);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
